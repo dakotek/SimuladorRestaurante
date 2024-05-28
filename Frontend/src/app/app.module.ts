@@ -9,6 +9,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { NavComponent } from './shared/nav/nav.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { DashboardCookComponent } from './pages/dashboardCook/dashboardCook.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { DashboardCookComponent } from './pages/dashboardCook/dashboardCook.comp
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideClientHydration()
