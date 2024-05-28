@@ -5,7 +5,17 @@
   "projects": {
     "Frontend": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -97,8 +107,5 @@
         }
       }
     }
-  },
-  "cli": {
-    "analytics": "5f840dd6-68fb-4fed-9adc-c348ee0af95f"
   }
 }
