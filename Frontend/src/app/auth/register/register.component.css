@@ -1,0 +1,20 @@
+form {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.mb-3 label {
+    color: #333;
+    font-weight: bold;
+}
+
+.btn-login {
+    text-align: center;
+    margin-top: 15px;
+}
