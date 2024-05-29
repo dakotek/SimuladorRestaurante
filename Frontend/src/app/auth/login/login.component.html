@@ -1,0 +1,29 @@
+<form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="mb-3">
+      <label for="inputEmail" class="form-label">Correo electrónico</label>
+      <input formControlName="email" type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+        <div *ngIf="email.errors?.['required']">
+            El email es obligatorio
+        </div>
+        <div *ngIf="email.errors?.['email']">
+            El email debe de tener un formato válido
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="inputPassword" class="form-label">Contraseña</label>
+      <input formControlName="password" type="password" class="form-control" id="inputPassword">
+      <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+        <div *ngIf="password.errors?.['required']">
+            La contraseña es obligatoria
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+    </div>
+    <div class="btn-register">
+        ¿No tienes una cuenta? <a routerLink="/registro">Regístrate</a>
+    </div> 
+</form>

@@ -1,0 +1,70 @@
+<form [formGroup]="registerForm" (ngSubmit)="register()">
+    <div class="mb-3">
+        <label for="inputName" class="form-label">Nombre</label>
+        <input formControlName="name" type="text" class="form-control" id="inputName">
+        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+            <div *ngIf="name.errors?.['required']">
+                El nombre es obligatorio
+            </div>
+            <div *ngIf="name.errors?.['minlength']">
+                El nombre debe de tener mínimo 3 caracteres
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="inputEmail" class="form-label">Correo electrónico</label>
+        <input formControlName="email" type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+            <div *ngIf="email.errors?.['required']">
+                El email es obligatorio
+            </div>
+            <div *ngIf="email.errors?.['email']">
+                El email debe de tener un formato válido
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="inputPassword" class="form-label">Contraseña</label>
+        <input formControlName="password" type="password" class="form-control" id="inputPassword">
+        <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+            <div *ngIf="password.errors?.['required']">
+                La contraseña es obligatoria
+            </div>
+            <div *ngIf="password.errors?.['minlength']">
+                La contraseña debe de tener mínimo 6 caracteres
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="inputConfirmPassword" class="form-label">Repetir contraseña</label>
+        <input formControlName="confirmPassword" type="password" class="form-control" id="inputConfirmPassword"
+            [ngClass]="{
+                'ng-valid': confirmPassword.value === password.value && (confirmPassword.dirty || confirmPassword.touched),
+                'ng-invalid': (confirmPassword.value !== password.value || confirmPassword.value === '') && (confirmPassword.dirty || confirmPassword.touched)
+            }">
+        <div class="text-danger">
+            <div *ngIf="confirmPassword?.dirty || confirmPassword?.touched">
+                <div *ngIf="confirmPassword.value !== password.value">
+                    Las contraseñas no coinciden
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="role2" value="cliente" checked="true">
+            <label class="form-check-label" for="role2">Cliente</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="role3" value="cocinero">
+            <label class="form-check-label" for="role3">Cocinero</label>
+        </div>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+    </div>
+    <div class="btn-login">
+        ¿Ya tienes una cuenta? <a routerLink="/inicio-sesion">Inicia sesión</a>
+    </div>
+</form>
