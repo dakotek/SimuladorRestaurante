@@ -32,12 +32,21 @@ export class LoginComponent implements OnInit{
 
   login() {
     if (this.loginForm.valid) {
-      this.loginService.login(this.loginForm.value as LoginRequest);
-      this.router.navigateByUrl('/cliente');
+      this.loginService.login(this.loginForm.value as LoginRequest)
+        .then(userType => { 
+          if (userType === 'CLIENT') {
+            this.router.navigateByUrl('/cliente');
+          } else if (userType === 'COOK') {
+            this.router.navigateByUrl('/cocinero');
+          }
+          this.loginForm.reset();
+        })  
+        .catch(error => {
+          alert('Fallo en el inicio de sesión: ' + error);
+        });
       this.loginForm.reset();
     } else {
       this.loginForm.markAllAsTouched();
     }
   }
-
 }

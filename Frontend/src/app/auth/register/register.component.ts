@@ -16,7 +16,8 @@ export class RegisterComponent implements OnInit {
     name: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    confirmPassword: ['', []]
+    confirmPassword: ['', []],
+    role: ['CLIENT', []]
   }, { validators: confirmPasswordValidator });
 
 
@@ -44,11 +45,17 @@ export class RegisterComponent implements OnInit {
 
   register() {
     if (this.registerForm.valid) {
-      this.registerService.register(this.registerForm.value as RegisterRequest);
-      this.router.navigateByUrl('/inicio-sesion');
-      this.registerForm.reset();
+      const { confirmPassword, ...registerData } = this.registerForm.value; // Eliminar confirmPassword del objeto antes de enviarlo al servicio
+      this.registerService.register(registerData as RegisterRequest)
+        .then(() => {
+          this.router.navigateByUrl('/inicio-sesion');
+          this.registerForm.reset();
+        })
+        .catch(error => {
+          alert('Fallo en el registro: ' + error);
+        });;
     } else {
       this.registerForm.markAllAsTouched();
     }
-  }
+  }  
 }
