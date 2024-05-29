@@ -3,7 +3,7 @@ package es.metrica.mar24.SimuladorRestaurante.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import es.metrica.mar24.SimuladorRestaurante.entities.UserEntity;
+import es.metrica.mar24.SimuladorRestaurante.entities.User;
 import es.metrica.mar24.SimuladorRestaurante.services.UserService;
 
 import java.util.List;
@@ -17,17 +17,17 @@ public class UserController {
     private UserService userService;
  
     @GetMapping
-    public List<UserEntity> getAllUsers() {
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
  
     @GetMapping("/{id}")
-    public Optional<UserEntity> getUserById(@PathVariable Long id) {
+    public Optional<User> getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
  
     @PostMapping
-    public UserEntity createUser(@RequestBody UserEntity user) {
+    public User createUser(@RequestBody User user) {
         return userService.saveUser(user);
     }
  
@@ -37,12 +37,12 @@ public class UserController {
     }
  
     @GetMapping("/email/{email}")
-    public Optional<UserEntity> getUserByEmail(@PathVariable String email) {
+    public Optional<User> getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email);
     }
     
     @PutMapping("/{id}")
-    public UserEntity updateUser(@PathVariable Long id, @RequestBody UserEntity user) {
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 }
