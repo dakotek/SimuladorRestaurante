@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegisterService } from '../../services/auth/register.service';
 import { RegisterRequest } from '../../services/auth/registerRequest';
+import { confirmPasswordValidator } from './confirmPasswordValidator';
 
 @Component({
   selector: 'app-register',
@@ -15,12 +16,14 @@ export class RegisterComponent implements OnInit {
     name: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-  });
+    confirmPassword: ['', []]
+  }, { validators: confirmPasswordValidator });
+
 
   constructor(private formBuilder:FormBuilder, private router:Router, private registerService:RegisterService) { }
 
   ngOnInit(): void {
-    
+
   }
 
   get name() {
@@ -34,6 +37,10 @@ export class RegisterComponent implements OnInit {
   get password() {
     return this.registerForm.controls.password;
   }
+  
+  get confirmPassword() {
+    return this.registerForm.controls.confirmPassword;
+  }
 
   register() {
     if (this.registerForm.valid) {
@@ -44,5 +51,4 @@ export class RegisterComponent implements OnInit {
       this.registerForm.markAllAsTouched();
     }
   }
-  
 }
