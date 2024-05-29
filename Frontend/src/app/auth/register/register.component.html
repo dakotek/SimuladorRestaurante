@@ -25,7 +25,14 @@
     </div>
     <div class="mb-3">
         <label for="inputPassword" class="form-label">Contraseña</label>
-        <input formControlName="password" type="password" class="form-control" id="inputPassword">
+        <div class="input-group">
+            <input formControlName="password" [type]="showPassword ? 'text' : 'password'" class="form-control" id="inputPassword">
+            <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility()">
+                <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+        </div>
+        
+
         <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
             <div *ngIf="password.errors?.['required']">
                 La contraseña es obligatoria
@@ -37,11 +44,17 @@
     </div>
     <div class="mb-3">
         <label for="inputConfirmPassword" class="form-label">Repetir contraseña</label>
-        <input formControlName="confirmPassword" type="password" class="form-control" id="inputConfirmPassword"
-            [ngClass]="{
-                'ng-valid': confirmPassword.value === password.value && (confirmPassword.dirty || confirmPassword.touched),
-                'ng-invalid': (confirmPassword.value !== password.value || confirmPassword.value === '') && (confirmPassword.dirty || confirmPassword.touched)
-            }">
+        <div class="input-group" >
+            <input formControlName="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" id="inputConfirmPassword"
+                [ngClass]="{
+                    'ng-valid': confirmPassword.value === password.value && (confirmPassword.dirty || confirmPassword.touched),
+                    'ng-invalid': confirmPassword.value !== password.value && (confirmPassword.dirty || confirmPassword.touched)
+                }"
+            >
+            <button type="button" class="btn btn-outline-secondary" (click)="toggleConfirmPasswordVisibility()">
+                <i class="fas" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+        </div>
         <div class="text-danger">
             <div *ngIf="confirmPassword?.dirty || confirmPassword?.touched">
                 <div *ngIf="confirmPassword.value !== password.value">
