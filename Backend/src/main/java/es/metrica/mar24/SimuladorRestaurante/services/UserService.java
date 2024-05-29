@@ -1,10 +1,9 @@
 package es.metrica.mar24.SimuladorRestaurante.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import es.metrica.mar24.SimuladorRestaurante.entities.UserEntity;
+import es.metrica.mar24.SimuladorRestaurante.entities.User;
 import es.metrica.mar24.SimuladorRestaurante.repositories.UserRepository;
 
 import java.util.List;
@@ -16,15 +15,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
  
-    public List<UserEntity> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
  
-    public Optional<UserEntity> getUserById(Long id) {
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
  
-    public UserEntity saveUser(UserEntity user) {
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
  
@@ -32,22 +31,19 @@ public class UserService {
         userRepository.deleteById(id);
     }
  
-    public Optional<UserEntity> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByUsername(email);
     }
     
-    public UserEntity updateUser(Long id, UserEntity user) {
-        Optional<UserEntity> optionalUser = userRepository.findById(id);
+    public User updateUser(Long id, User user) {
+        Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
-            UserEntity existingUser = optionalUser.get();
-            // Update fields as necessary
-            existingUser.setName(user.getName());
+        	User existingUser = optionalUser.get();
+            existingUser.setUsername(user.getUsername());
             existingUser.setEmail(user.getEmail());
             existingUser.setPassword(user.getPassword());
-            // ... update other fields as necessary
             return userRepository.save(existingUser);
         } else {
-            // Handle the case where the user does not exist
             throw new RuntimeException("User not found with id " + id);
         }
     }
