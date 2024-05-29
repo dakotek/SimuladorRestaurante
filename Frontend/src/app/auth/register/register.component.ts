@@ -20,6 +20,8 @@ export class RegisterComponent implements OnInit {
     role: ['CLIENT', []]
   }, { validators: confirmPasswordValidator });
 
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(private formBuilder:FormBuilder, private router:Router, private registerService:RegisterService) { }
 
@@ -41,6 +43,14 @@ export class RegisterComponent implements OnInit {
   
   get confirmPassword() {
     return this.registerForm.controls.confirmPassword;
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   register() {
