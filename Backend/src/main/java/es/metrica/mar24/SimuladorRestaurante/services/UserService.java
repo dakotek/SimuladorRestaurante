@@ -32,7 +32,7 @@ public class UserService {
     }
  
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByUsername(email);
+        return userRepository.findByEmail(email);
     }
     
     public User updateUser(Long id, User user) {
