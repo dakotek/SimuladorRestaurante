@@ -84,12 +84,12 @@ class SimuladorRestauranteApplicationTests {
 	}
 
 	@Test
-	void testFindByUsername() {
+	void testFindByEmail() {
 		UserRepository userRepository = mock(UserRepository.class);
 		User user = new User(1, "test", "passwordTest", "test@email.com", Rol.CLIENT);
-		when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+		when(userRepository.findByEmail("test@email.com")).thenReturn(Optional.of(user));
 
-		Optional<User> result = userRepository.findByUsername("test");
+		Optional<User> result = userRepository.findByEmail("test@email.com");
 		assertEquals(user, result.get());
 	}
 
@@ -175,7 +175,7 @@ class SimuladorRestauranteApplicationTests {
     @Test
     void testFindByEmailService() {
         User user = new User(1, "user1", "password1", "user1@example.com", Rol.CLIENT);
-        when(userRepository.findByUsername("user1@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail("user1@example.com")).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findByEmail("user1@example.com");
         assertEquals(user, result.get());
@@ -263,44 +263,44 @@ class SimuladorRestauranteApplicationTests {
     
     @Test
     void testLoginRequest() {
-    	String username = "user1";
+    	String username = "user1@email.com";
         String password = "password1234";
         LoginRequest loginRequest = new LoginRequest(username, password);
 
-        assertEquals(username, loginRequest.getUsername());
+        assertEquals(username, loginRequest.getEmail());
         assertEquals(password, loginRequest.getPassword());
 
-        loginRequest.setUsername("user2");
+        loginRequest.setEmail("user2@email.com");
         loginRequest.setPassword("password4321");
-        assertEquals("user2", loginRequest.getUsername());
+        assertEquals("user2@email.com", loginRequest.getEmail());
         assertEquals("password4321", loginRequest.getPassword());
     }
 
     @Test
     void testLoginRequestBuilder() {
-    	String username = "user1";
+    	String username = "user1@email.com";
         String password = "password1234";
         LoginRequest loginRequest = LoginRequest.builder()
-                .setUsername(username)
+                .setEmail(username)
                 .setPassword(password)
                 .build();
 
-        assertEquals(username, loginRequest.getUsername());
+        assertEquals(username, loginRequest.getEmail());
         assertEquals(password, loginRequest.getPassword());
 
         LoginRequest loginRequest2 = LoginRequest.builder()
-                .setUsername("user2")
+                .setEmail("user2@email.com")
                 .setPassword("password4321")
                 .build();
 
-        assertEquals("user2", loginRequest2.getUsername());
+        assertEquals("user2@email.com", loginRequest2.getEmail());
         assertEquals("password4321", loginRequest2.getPassword());
     }
     
     @Test
     void testEmptyLoginRequestBuilder() {
         LoginRequest loginRequest = LoginRequest.builder().build();
-        assertNull(loginRequest.getUsername());
+        assertNull(loginRequest.getEmail());
         assertNull(loginRequest.getPassword());
     }
     
@@ -317,16 +317,17 @@ class SimuladorRestauranteApplicationTests {
         assertEquals(password, registerRequest.getPassword());
         assertEquals(email, registerRequest.getEmail());
         assertEquals(role, registerRequest.getRole());
+        
+        RegisterRequest registerRequest2 = new RegisterRequest();
+        registerRequest2.setUsername("user2");
+        registerRequest2.setPassword("password4321");
+        registerRequest2.setEmail("user2@example.com");
+        registerRequest2.setRole("COOK");
 
-        registerRequest.setUsername("user2");
-        registerRequest.setPassword("password4321");
-        registerRequest.setEmail("user2@example.com");
-        registerRequest.setRole("COOK");
-
-        assertEquals("user2", registerRequest.getUsername());
-        assertEquals("password4321", registerRequest.getPassword());
-        assertEquals("user2@example.com", registerRequest.getEmail());
-        assertEquals("COOK", registerRequest.getRole());
+        assertEquals("user2", registerRequest2.getUsername());
+        assertEquals("password4321", registerRequest2.getPassword());
+        assertEquals("user2@example.com", registerRequest2.getEmail());
+        assertEquals("COOK", registerRequest2.getRole());
     }
 
     @Test
