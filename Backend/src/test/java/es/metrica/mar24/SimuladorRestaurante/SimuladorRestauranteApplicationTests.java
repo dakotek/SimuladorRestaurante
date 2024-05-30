@@ -145,4 +145,48 @@ class SimuladorRestauranteApplicationTests {
         assertEquals(newUser.getPassword(), updatedUser.getPassword());
         assertEquals(newUser.getEmail(), updatedUser.getEmail());
     }
+
+    @Test
+    void testUpdateUser_UserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {
+            userService.updateUser(1L, new User());
+        });
+    }
+    
+    @Test
+    void getAuthorities() {
+        User user = new User();
+        user.setRole(Rol.CLIENT);
+
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+        assertEquals(1, authorities.size());
+        assertTrue(authorities.contains(new SimpleGrantedAuthority(Rol.CLIENT.name())));
+    }
+
+    @Test
+    void isAccountNonExpired() {
+        User user = new User();
+        assertTrue(user.isAccountNonExpired());
+    }
+
+    @Test
+    void isAccountNonLocked() {
+        User user = new User();
+        assertTrue(user.isAccountNonLocked());
+    }
+
+    @Test
+    void isCredentialsNonExpired() {
+        User user = new User();
+        assertTrue(user.isCredentialsNonExpired());
+    }
+
+    @Test
+    void isEnabled() {
+        User user = new User();
+        assertTrue(user.isEnabled());
+    }
+
 }
