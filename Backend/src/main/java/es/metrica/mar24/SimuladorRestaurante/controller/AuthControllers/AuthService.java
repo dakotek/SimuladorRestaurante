@@ -18,40 +18,54 @@ import es.metrica.mar24.SimuladorRestaurante.repositories.UserRepository;
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+	private final UserRepository userRepository;
+	private final JwtService jwtService;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
 
-    
-    public AuthService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-    }
 
-    public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
-    }
+	public AuthService(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+		this.userRepository = userRepository;
+		this.jwtService = jwtService;
+		this.passwordEncoder = passwordEncoder;
+		this.authenticationManager = authenticationManager;
+	}
 
-    public AuthResponse register(RegisterRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .email(request.getEmail())
-                .role(Rol.CLIENT)
-                .build();
+	public AuthResponse login(LoginRequest request) {
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+		UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+		String token = jwtService.getToken(user);
+		return AuthResponse.builder()
+				.token(token)
+				.build();
+	}
 
-        userRepository.save(user);
+	public AuthResponse register(RegisterRequest request) {
 
-        return AuthResponse.builder()
-                .token(jwtService.getToken(user))
-                .build();
-    }
+		User user;
+		if(request.getRole().equals("COOK")) {
+
+			user= User.builder()
+					.username(request.getUsername())
+					.password(passwordEncoder.encode(request.getPassword()))
+					.email(request.getEmail())
+					.role(Rol.COOK)
+					.build();
+		}else {
+
+			user= User.builder()
+					.username(request.getUsername())
+					.password(passwordEncoder.encode(request.getPassword()))
+					.email(request.getEmail())
+					.role(Rol.CLIENT)
+					.build();
+
+		}
+
+		userRepository.save(user);
+
+		return AuthResponse.builder()
+				.token(jwtService.getToken(user))
+				.build();
+	}
 }
