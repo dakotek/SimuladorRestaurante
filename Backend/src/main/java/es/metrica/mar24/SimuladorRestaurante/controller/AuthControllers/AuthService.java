@@ -2,6 +2,10 @@ package es.metrica.mar24.SimuladorRestaurante.controller.AuthControllers;
 
 
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,8 +43,22 @@ public class AuthService {
      */
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        UserDetails user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        String token = jwtService.getToken(user);
+        UserDetails userDetails = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        User user = userOptional.orElseThrow();
+        long userId = user.getId();
+        String username = user.getUsername();
+        String email = user.getEmail();
+        Rol role = user.getRole();
+        
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("username", username);
+        claims.put("email", email);
+        claims.put("role", role);
+        
+        String token = jwtService.getToken(claims, userDetails);
         return AuthResponse.builder()
                 .token(token)
                 .build();

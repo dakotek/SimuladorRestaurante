@@ -40,10 +40,10 @@ export class LoginComponent implements OnInit{
   login() {
     if (this.loginForm.valid) {
       this.loginService.login(this.loginForm.value as LoginRequest)
-        .then(userType => {
-          if (userType === 'CLIENT') {
+        .then(() => {
+          if (localStorage.getItem('role') === 'CLIENT') {
             this.router.navigateByUrl('/cliente');
-          } else if (userType === 'COOK') {
+          } else if (localStorage.getItem('role') === 'COOK') {
             this.router.navigateByUrl('/cocinero');
           }
           this.loginForm.reset();
@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit{
         .catch(error => {
           this.errorMessage = error.message;
         });
-      this.loginForm.reset();
     } else {
       this.loginForm.markAllAsTouched();
     }
