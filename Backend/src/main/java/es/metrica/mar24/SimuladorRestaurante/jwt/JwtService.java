@@ -32,7 +32,7 @@ public class JwtService {
         return getToken(new HashMap<>(), user);
     }
 
-    private String getToken(Map<String, Object> extraClaims, UserDetails user) {
+    public String getToken(Map<String, Object> extraClaims, UserDetails user) {
         // Construye el token JWT con los detalles del usuario y las reclamaciones adicionales
         return Jwts
                 .builder()
