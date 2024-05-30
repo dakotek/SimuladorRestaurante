@@ -52,6 +52,7 @@ public class AuthService {
         String email = user.getEmail();
         Rol role = user.getRole();
         
+        
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("username", username);
