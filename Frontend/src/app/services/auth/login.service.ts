@@ -6,21 +6,25 @@ import { LoginRequest } from './loginRequest';
 })
 export class LoginService {
 
-  constructor() { }
+  constructor() {}
 
-  login(credentials: LoginRequest): Promise<any> {
+  async login(credentials: LoginRequest): Promise<any> {
     // credentials = {name: 'Admin', email: 'admin@admin.com'}
-    return fetch('/auth/login', {
+    return fetch('http://localhost:9000/auth/inicio-sesion', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(credentials)
-    }).then(response => {
+    }).then(async response => {
       if (!response.ok) {
-        throw new Error('Fallo en el inicio de sesión');
+        return response.json().then(error => {
+          throw new Error(error.message || 'Error desconocido');
+        });
       }
-      return response.json() as Promise<string>;
+      return await response.json().then(data => data.token)
+    }).catch(error => {
+      throw new Error(error.message || 'No se pudo conectar al servidor');
     });
   }
 }

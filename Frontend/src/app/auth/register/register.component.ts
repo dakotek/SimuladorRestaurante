@@ -13,7 +13,7 @@ import { confirmPasswordValidator } from './confirmPasswordValidator';
 export class RegisterComponent implements OnInit {
 
   registerForm = this.formBuilder.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
+    username: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', []],
@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
 
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
+  errorMessage: string | null = null;
 
   constructor(private formBuilder:FormBuilder, private router:Router, private registerService:RegisterService) { }
 
@@ -30,7 +31,7 @@ export class RegisterComponent implements OnInit {
   }
 
   get name() {
-    return this.registerForm.controls.name;
+    return this.registerForm.controls.username;
   }
 
   get email() {
@@ -62,7 +63,7 @@ export class RegisterComponent implements OnInit {
           this.registerForm.reset();
         })
         .catch(error => {
-          alert('Fallo en el registro: ' + error);
+          this.errorMessage = error.message;
         });
     } else {
       this.registerForm.markAllAsTouched();
