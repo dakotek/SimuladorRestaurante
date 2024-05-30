@@ -19,11 +19,6 @@ public class AplicationConfig {
 
     private final UserRepository userRepository;
 
-    /**
-     * Constructor que inyecta el repositorio de usuarios.
-     *
-     * @param userRepository el repositorio de usuarios
-     */
     public AplicationConfig(UserRepository userRepository) {
         super();
         this.userRepository = userRepository;
@@ -42,8 +37,8 @@ public class AplicationConfig {
     }
 
     /**
-     * Define el bean AuthenticationProvider que utiliza DaoAuthenticationProvider
-     * para la autenticación basada en los datos del usuario en la base de datos.
+     * Este bean utiliza DaoAuthenticationProvider para la autenticación
+     * basada en los datos del usuario en la base de datos.
      *
      * @return el AuthenticationProvider configurado
      */
@@ -56,7 +51,7 @@ public class AplicationConfig {
     }
 
     /**
-     * Define el bean PasswordEncoder que utiliza BCryptPasswordEncoder para la codificación de contraseñas.
+     * Este bean utiliza BCryptPasswordEncoder para la codificación de contraseñas.
      *
      * @return el PasswordEncoder configurado
      */
@@ -66,8 +61,8 @@ public class AplicationConfig {
     }
 
     /**
-     * Define el bean UserDetailsService que busca un usuario por nombre de usuario
-     * en el repositorio y lanza una excepción si el usuario no es encontrado.
+     * Este bean tiene la función de comprobar si el email de usuario ya esxiste en la base de datos
+     * y si no lanzar una excepción
      *
      * @return el UserDetailsService configurado
      */

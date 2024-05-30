@@ -31,41 +31,39 @@ public class AuthService {
 		this.authenticationManager = authenticationManager;
 	}
 
-	public AuthResponse login(LoginRequest request) {
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-		UserDetails user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-		String token = jwtService.getToken(user);
-		return AuthResponse.builder()
-				.token(token)
-				.build();
-	}
+	/**
+     * Maneja la solicitud de inicio de sesión.
+     *
+     * @param request los datos de inicio de sesión proporcionados por el cliente
+     * @return una respuesta de autenticación que contiene el token JWT
+     */
+    public AuthResponse login(LoginRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        UserDetails user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        String token = jwtService.getToken(user);
+        return AuthResponse.builder()
+                .token(token)
+                .build();
+    }
 
-	public AuthResponse register(RegisterRequest request) {
+    /**
+     * Maneja la solicitud de registro de usuario.
+     *
+     * @param request los datos de registro proporcionados por el cliente
+     * @return una respuesta de autenticación que contiene el token JWT
+     */
+    public AuthResponse register(RegisterRequest request) {
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .email(request.getEmail())
+                .role(request.getRole().equals("COOK") ? Rol.COOK : Rol.CLIENT)
+                .build();
 
-		User user;
-		if(request.getRole().equals("COOK")) {
+        userRepository.save(user);
 
-			user= User.builder()
-					.username(request.getUsername())
-					.password(passwordEncoder.encode(request.getPassword()))
-					.email(request.getEmail())
-					.role(Rol.COOK)
-					.build();
-		}else {
-
-			user= User.builder()
-					.username(request.getUsername())
-					.password(passwordEncoder.encode(request.getPassword()))
-					.email(request.getEmail())
-					.role(Rol.CLIENT)
-					.build();
-
-		}
-
-		userRepository.save(user);
-
-		return AuthResponse.builder()
-				.token(jwtService.getToken(user))
-				.build();
-	}
+        return AuthResponse.builder()
+                .token(jwtService.getToken(user))
+                .build();
+    }
 }
