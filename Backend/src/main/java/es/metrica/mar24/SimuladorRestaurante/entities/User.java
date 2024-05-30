@@ -121,29 +121,53 @@ public class User implements UserDetails {
         return new UserBuilder();
     }
 
+    /**
+     * Devuelve una colección de autoridades (roles) concedidos al usuario.
+     *
+     * @return una colección de autoridades concedidas al usuario
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    /**
+     * Indica si la cuenta del usuario no ha expirado.
+     *
+     * @return true si la cuenta del usuario no ha expirado, false de lo contrario
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * Indica si la cuenta del usuario no está bloqueada.
+     *
+     * @return true si la cuenta del usuario no está bloqueada, false de lo contrario
+     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    /**
+     * Indica si las credenciales del usuario no han expirado.
+     *
+     * @return true si las credenciales del usuario no han expirado, false de lo contrario
+     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    /**
+     * Indica si la cuenta del usuario está habilitada.
+     *
+     * @return true si la cuenta del usuario está habilitada, false de lo contrario
+     */
     @Override
     public boolean isEnabled() {
         return true;
     }
-
 }
