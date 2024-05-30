@@ -16,6 +16,8 @@ export class LoginComponent implements OnInit{
     password:['', [Validators.required]],
   })
 
+  showPassword: boolean = false
+
   constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService) { }
 
   ngOnInit(): void {
@@ -28,6 +30,10 @@ export class LoginComponent implements OnInit{
 
   get password() {
     return this.loginForm.controls.password;
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   login() {

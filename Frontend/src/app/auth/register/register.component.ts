@@ -63,7 +63,7 @@ export class RegisterComponent implements OnInit {
         })
         .catch(error => {
           alert('Fallo en el registro: ' + error);
-        });;
+        });
     } else {
       this.registerForm.markAllAsTouched();
     }
