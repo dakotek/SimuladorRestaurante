@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit{
   })
 
   showPassword: boolean = false
+  errorMessage: string | null = null
 
   constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService) { }
 
@@ -39,16 +40,16 @@ export class LoginComponent implements OnInit{
   login() {
     if (this.loginForm.valid) {
       this.loginService.login(this.loginForm.value as LoginRequest)
-        .then(userType => { 
+        .then(userType => {
           if (userType === 'CLIENT') {
             this.router.navigateByUrl('/cliente');
           } else if (userType === 'COOK') {
             this.router.navigateByUrl('/cocinero');
           }
           this.loginForm.reset();
-        })  
+        })
         .catch(error => {
-          alert('Fallo en el inicio de sesión: ' + error);
+          this.errorMessage = error.message;
         });
       this.loginForm.reset();
     } else {

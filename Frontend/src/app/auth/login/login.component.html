@@ -1,7 +1,10 @@
 <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
     <div class="mb-3">
       <label for="inputEmail" class="form-label">Correo electrónico</label>
-      <input formControlName="email" type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+      <input formControlName="email" type="text" class="form-control" id="inputEmail" aria-describedby="emailHelp">
       <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
         <div *ngIf="email.errors?.['required']">
             El email es obligatorio
