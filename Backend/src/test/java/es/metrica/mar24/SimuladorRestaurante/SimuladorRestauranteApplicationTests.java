@@ -83,7 +83,6 @@ class SimuladorRestauranteApplicationTests {
 		when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
 
 		Optional<User> result = userRepository.findByUsername("test");
-
 		assertEquals(user, result.get());
 	}
 
@@ -92,7 +91,6 @@ class SimuladorRestauranteApplicationTests {
         List<User> userList = new ArrayList<>();
         userList.add(new User(1, "user1", "password1", "user1@example.com", Rol.CLIENT));
         userList.add(new User(2, "user2", "password2", "user2@example.com", Rol.COOK));
-        
         when(userRepository.findAll()).thenReturn(userList);
         
         List<User> result = userService.getAllUsers();
@@ -100,5 +98,51 @@ class SimuladorRestauranteApplicationTests {
         assertEquals(2, result.size());
         assertEquals(userList.get(0), result.get(0)); 
         assertEquals(userList.get(1), result.get(1));
+    }
+	
+	@Test
+    void testGetUserById() {
+        User user = new User(1, "user1", "password1", "user1@example.com", Rol.CLIENT);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.getUserById(1L);
+        assertEquals(user, result.get());
+    }
+
+    @Test
+    void testSaveUser() {
+        User user = new User(1, "user1", "password1", "user1@example.com", Rol.CLIENT);
+        when(userRepository.save(user)).thenReturn(user);
+
+        User savedUser = userService.saveUser(user);
+        assertEquals(user, savedUser);
+    }
+
+    @Test
+    void testDeleteUser() {
+        userService.deleteUser(1L);
+        verify(userRepository).deleteById(1L);
+    }
+
+    @Test
+    void testFindByEmail() {
+        User user = new User(1, "user1", "password1", "user1@example.com", Rol.CLIENT);
+        when(userRepository.findByUsername("user1@example.com")).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.findByEmail("user1@example.com");
+        assertEquals(user, result.get());
+    }
+
+    @Test
+    void testUpdateUser() {
+        User existingUser = new User(1, "user1", "password1", "user1@example.com", Rol.CLIENT);
+        User newUser = new User(1, "newUser", "newPassword", "newuser@example.com", Rol.COOK);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
+
+        User updatedUser = userService.updateUser(1L, newUser);
+        assertEquals(newUser.getUsername(), updatedUser.getUsername());
+        assertEquals(newUser.getPassword(), updatedUser.getPassword());
+        assertEquals(newUser.getEmail(), updatedUser.getEmail());
     }
 }
