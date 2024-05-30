@@ -12,6 +12,7 @@ import { DashboardCookComponent } from './pages/dashboardCook/dashboardCook.comp
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavWithoutSearchComponent } from './shared/nav-without-search/nav-without-search.component';
 import { JwtModule, JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { CountryImgsComponent } from './shared/country-imgs/country-imgs.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { JwtModule, JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
     NavComponent,
     RegisterComponent,
     DashboardCookComponent,
-    NavWithoutSearchComponent
+    NavWithoutSearchComponent,
+    CountryImgsComponent
   ],
   imports: [
     BrowserModule,
