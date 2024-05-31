@@ -48,7 +48,7 @@ public class AuthService {
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
         User user = userOptional.orElseThrow();
         long userId = user.getId();
-        String username = user.getUsername();
+        String username = user.getUsername(); 
         String email = user.getEmail();
         Rol role = user.getRole();
         
@@ -59,7 +59,7 @@ public class AuthService {
         claims.put("email", email);
         claims.put("role", role);
         
-        String token = jwtService.getToken(claims, userDetails);
+        String token = jwtService.getToken(claims, user);
         return AuthResponse.builder()
                 .token(token)
                 .build();
