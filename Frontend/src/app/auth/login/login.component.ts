@@ -22,7 +22,14 @@ export class LoginComponent implements OnInit{
   constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService) { }
 
   ngOnInit(): void {
-    
+    if (localStorage.getItem('token') !== null) {
+      if (localStorage.getItem('role') === 'CLIENT') {
+        this.router.navigateByUrl('/cliente');
+      }
+      if (localStorage.getItem('role') === 'COOK') {
+        this.router.navigateByUrl('/cocinero');
+      }
+    }
   }
 
   get email() {
