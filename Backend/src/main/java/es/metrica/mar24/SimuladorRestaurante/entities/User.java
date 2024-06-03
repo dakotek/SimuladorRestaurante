@@ -7,11 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
-public class User implements UserDetails {
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+public class User implements CustomUserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +19,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -62,6 +63,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
@@ -143,5 +145,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

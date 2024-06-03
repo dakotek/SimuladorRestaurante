@@ -7,14 +7,16 @@ public class RegisterRequest {
     private String username;
     private String password;
     private String email;
+    private String role;
 
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String username, String password, String email) {
+    public RegisterRequest(String username, String password, String email, String role) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -40,12 +42,20 @@ public class RegisterRequest {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public String getRole() {
+        return role;
+    }
 
-    // Builder pattern
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public static class RegisterRequestBuilder {
         private String username;
         private String password;
         private String email;
+        private String role;
 
         public RegisterRequestBuilder username(String username) {
             this.username = username;
@@ -61,9 +71,13 @@ public class RegisterRequest {
             this.email = email;
             return this;
         }
+        public RegisterRequestBuilder role(String role) {
+            this.role = role;
+            return this;
+        }
 
         public RegisterRequest build() {
-            return new RegisterRequest(username, password, email);
+            return new RegisterRequest(username, password, email, role);
         }
     }
 

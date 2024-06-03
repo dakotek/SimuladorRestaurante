@@ -11,6 +11,8 @@ import { RegisterComponent } from './auth/register/register.component';
 import { DashboardCookComponent } from './pages/dashboardCook/dashboardCook.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavWithoutSearchComponent } from './shared/nav-without-search/nav-without-search.component';
+import { JwtModule, JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { CountryImgsComponent } from './shared/country-imgs/country-imgs.component';
 
 @NgModule({
   declarations: [
@@ -21,15 +23,19 @@ import { NavWithoutSearchComponent } from './shared/nav-without-search/nav-witho
     NavComponent,
     RegisterComponent,
     DashboardCookComponent,
-    NavWithoutSearchComponent
+    NavWithoutSearchComponent,
+    CountryImgsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    JwtModule.forRoot({})
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    JwtHelperService,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }
   ],
   bootstrap: [AppComponent]
 })

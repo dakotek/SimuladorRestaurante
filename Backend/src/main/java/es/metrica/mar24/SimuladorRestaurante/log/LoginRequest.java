@@ -4,21 +4,21 @@ package es.metrica.mar24.SimuladorRestaurante.log;
 public class LoginRequest {
 
 
-	private String username;
+	private String email;
 	private String password;
 
 
-	public LoginRequest(String username, String password) {
-		this.username = username;
+	public LoginRequest(String email, String password) {
+		this.email = email;
 		this.password = password;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -30,11 +30,11 @@ public class LoginRequest {
 	}
 
 	public static class LoginRequestBuilder {
-		private String username;
+		private String email;
 		private String password;
 
-		public LoginRequestBuilder setUsername(String username) {
-			this.username = username;
+		public LoginRequestBuilder setEmail(String email) {
+			this.email = email;
 			return this;
 		}
 
@@ -44,7 +44,7 @@ public class LoginRequest {
 		}
 
 		public LoginRequest build() {
-			return new LoginRequest(username, password);
+			return new LoginRequest(email, password);
 		}
 	}
 

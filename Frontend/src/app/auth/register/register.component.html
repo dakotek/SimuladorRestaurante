@@ -1,7 +1,10 @@
 <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
     <div class="mb-3">
         <label for="inputName" class="form-label">Nombre</label>
-        <input formControlName="name" type="text" class="form-control" id="inputName">
+        <input formControlName="username" type="text" class="form-control" id="inputName">
         <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
             <div *ngIf="name.errors?.['required']">
                 El nombre es obligatorio
@@ -66,11 +69,11 @@
     
     <div class="mb-3">
         <div class="form-check form-check-inline">
-            <input formControlName="role" class="form-check-input" type="radio" name="role" id="role2" value="CLIENT">
+            <input formControlName="role" class="form-check-input no-validation" type="radio" name="role" id="role2" value="CLIENT">
             <label class="form-check-label" for="role2">Cliente</label>
         </div>
         <div class="form-check form-check-inline">
-            <input formControlName="role" class="form-check-input" type="radio" name="role" id="role3" value="COOK">
+            <input formControlName="role" class="form-check-input no-validation" type="radio" name="role" id="role3" value="COOK">
             <label class="form-check-label" for="role3">Cocinero</label>
         </div>
     </div>

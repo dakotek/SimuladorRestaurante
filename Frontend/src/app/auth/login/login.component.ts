@@ -16,10 +16,20 @@ export class LoginComponent implements OnInit{
     password:['', [Validators.required]],
   })
 
+  showPassword: boolean = false
+  errorMessage: string | null = null
+
   constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService) { }
 
   ngOnInit(): void {
-    
+    if (localStorage.getItem('token') !== null) {
+      if (localStorage.getItem('role') === 'CLIENT') {
+        this.router.navigateByUrl('/cliente');
+      }
+      if (localStorage.getItem('role') === 'COOK') {
+        this.router.navigateByUrl('/cocinero');
+      }
+    }
   }
 
   get email() {
@@ -30,21 +40,24 @@ export class LoginComponent implements OnInit{
     return this.loginForm.controls.password;
   }
 
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
   login() {
     if (this.loginForm.valid) {
       this.loginService.login(this.loginForm.value as LoginRequest)
-        .then(userType => { 
-          if (userType === 'CLIENT') {
+        .then(() => {
+          if (localStorage.getItem('role') === 'CLIENT') {
             this.router.navigateByUrl('/cliente');
-          } else if (userType === 'COOK') {
+          } else if (localStorage.getItem('role') === 'COOK') {
             this.router.navigateByUrl('/cocinero');
           }
           this.loginForm.reset();
-        })  
+        })
         .catch(error => {
-          alert('Fallo en el inicio de sesión: ' + error);
+          this.errorMessage = error.message;
         });
-      this.loginForm.reset();
     } else {
       this.loginForm.markAllAsTouched();
     }
