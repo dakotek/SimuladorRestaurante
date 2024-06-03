@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-without-search',
@@ -6,5 +7,15 @@ import { Component } from '@angular/core';
   styleUrl: './nav-without-search.component.css'
 })
 export class NavWithoutSearchComponent {
+
+  constructor(private router : Router){}
+
+  ngOnInit(){
+
+  }
+
+  goToProfile() : void{
+    this.router.navigateByUrl("/perfil")
+  }
 
 }
