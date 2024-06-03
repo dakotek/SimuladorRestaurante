@@ -47,7 +47,7 @@ public class AuthService {
         
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
         User user = userOptional.orElseThrow();
-        long userId = user.getId();
+        long userId = user.getId(); 
         String username = user.getUsername(); 
         String email = user.getEmail();
         Rol role = user.getRole();

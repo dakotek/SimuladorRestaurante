@@ -38,7 +38,7 @@ public class JwtService {
     public Key getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
-    }
+    } 
 
     public String getEmailFromToken(String token) {
         return getClaim(token, Claims::getSubject);
