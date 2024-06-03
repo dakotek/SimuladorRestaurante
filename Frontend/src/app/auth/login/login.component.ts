@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/auth/login.service';
 import { LoginRequest } from '../../services/auth/loginRequest';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +19,17 @@ export class LoginComponent implements OnInit{
 
   showPassword: boolean = false
   errorMessage: string | null = null
+  token : string | null = null
 
-  constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService) { }
+  constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService, private jwtHelper : JwtHelperService) { }
 
-  ngOnInit(): void {
-    if (localStorage.getItem('token') !== null) {
+   ngOnInit(): void {
+    this.token = localStorage.getItem('token')
+
+    if (this.jwtHelper.isTokenExpired(this.token)) {
+      this.errorMessage = 'La sesión ha expirado, inicia sesión de nuevo'
+      localStorage.clear()
+    }else{
       if (localStorage.getItem('role') === 'CLIENT') {
         this.router.navigateByUrl('/cliente');
       }
@@ -30,6 +37,8 @@ export class LoginComponent implements OnInit{
         this.router.navigateByUrl('/cocinero');
       }
     }
+      
+
   }
 
   get email() {
