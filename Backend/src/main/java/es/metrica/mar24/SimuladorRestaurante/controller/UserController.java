@@ -3,12 +3,15 @@ package es.metrica.mar24.SimuladorRestaurante.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import es.metrica.mar24.SimuladorRestaurante.entities.Rol;
 import es.metrica.mar24.SimuladorRestaurante.entities.User;
 import es.metrica.mar24.SimuladorRestaurante.services.UserService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
- 
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
