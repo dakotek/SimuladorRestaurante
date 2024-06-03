@@ -12,10 +12,15 @@ public class LoginRequest {
 		this.email = email;
 		this.password = password;
 	}
+	
+	public LoginRequest() {
+		super();
+	}
 
 	public String getEmail() {
 		return email;
 	}
+
 
 	public void setEmail(String email) {
 		this.email = email;
