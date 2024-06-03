@@ -35,7 +35,7 @@ public class JwtService {
                 .compact();
     }
 
-    private Key getKey() {
+    public Key getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -49,7 +49,7 @@ public class JwtService {
         return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 
-    private Claims getAllClaims(String token) {
+    public Claims getAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getKey())

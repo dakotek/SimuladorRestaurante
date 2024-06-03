@@ -31,7 +31,7 @@ import es.metrica.mar24.SimuladorRestaurante.services.UserService;
 
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
-class SimuladorRestauranteApplicationTests {
+class TestUser {
 
     private UserService userService;
     private UserRepository userRepository;

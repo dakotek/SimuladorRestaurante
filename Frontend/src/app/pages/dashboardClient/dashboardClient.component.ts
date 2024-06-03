@@ -9,10 +9,14 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class DashboardClientComponent implements OnInit{
 
+  token: string | null = null;
+
   constructor(private router:Router, private jwtHelper: JwtHelperService) {}
 
   ngOnInit(): void {
-    if (this.jwtHelper.isTokenExpired()) {
+    this.token = localStorage.getItem('token')
+
+    if (this.jwtHelper.isTokenExpired(this.token)) {
       this.router.navigateByUrl('/inicio-sesion');
     }
     if (localStorage.getItem('role') === "COOK") {
