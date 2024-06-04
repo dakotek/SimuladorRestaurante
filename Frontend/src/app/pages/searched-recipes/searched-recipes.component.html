@@ -1,1 +1,10 @@
-<p>searched-recipes works!</p>
+<button class="back-button" (click)="menuPrincipal()">Volver al menú principal</button>
+<h2>Resultados de búsqueda por nombre, ingrediente y categoría</h2>
+<div *ngIf="recipeDetails.length > 0" class="recipe-grid">
+  <div *ngFor="let recipe of recipeDetails">
+    <a (click)="goToRecipe(recipe.idMeal)">
+      <img [src]="recipe.strMealThumb" [alt]="recipe.strMeal">
+      <p>{{ recipe.strMeal }}</p>
+    </a>
+  </div>
+</div>
