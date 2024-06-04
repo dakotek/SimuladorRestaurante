@@ -15,6 +15,9 @@ import { JwtModule, JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { CountryImgsComponent } from './shared/country-imgs/country-imgs.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { NavProfileComponent } from './shared/nav-profile/nav-profile.component';
+import { RecipeComponent } from './pages/recipe/recipe.component';
+import { SearchedRecipesComponent } from './pages/searched-recipes/searched-recipes.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -28,13 +31,16 @@ import { NavProfileComponent } from './shared/nav-profile/nav-profile.component'
     NavWithoutSearchComponent,
     CountryImgsComponent,
     ProfileComponent,
-    NavProfileComponent
+    NavProfileComponent,
+    RecipeComponent,
+    SearchedRecipesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    JwtModule.forRoot({})
+    JwtModule.forRoot({}),
+    HttpClientModule
   ],
   providers: [
     provideClientHydration(),
