@@ -24,6 +24,7 @@ export class NavComponent {
 
   search(searchTerm: string): void {
     localStorage.setItem('searchTerm', searchTerm);
+    localStorage.setItem('searchType', 'normal');
     this.router.navigateByUrl("/busqueda");
   }
 }

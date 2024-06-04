@@ -20,9 +20,17 @@ export class SearchedRecipesComponent implements OnInit {
 
   ngOnInit() {
     const searchItem = localStorage.getItem('searchTerm');
-    if (searchItem) {
-      this.getSearchDetails(searchItem);
+    const searchType = localStorage.getItem('searchType')
+    if (searchType == 'normal') {
+      if (searchItem) {
+        this.getSearchDetails(searchItem);
+      }
+    } else {
+      if (searchItem) {
+        this.getSearchArea(searchItem);
+      }
     }
+    
   }
 
   getSearchDetails(searchItem: string) {
@@ -46,6 +54,14 @@ export class SearchedRecipesComponent implements OnInit {
         this.ingredientResults = response;
         this.getDetails(this.ingredientResults);
       });
+  }
+
+  getSearchArea(searchItem: string) {
+    this.http.get(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${searchItem}`)
+    .subscribe(response => {
+      this.searchResults = response;
+      this.getDetails(this.searchResults);
+    });
   }
 
   getDetails(results: any): void {

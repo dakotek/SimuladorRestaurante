@@ -1,5 +1,5 @@
 <button class="back-button" (click)="menuPrincipal()">Volver al menú principal</button>
-<h2>Resultados de búsqueda por nombre, ingrediente y categoría</h2>
+<h2>Resultados de búsqueda</h2>
 <div *ngIf="recipeDetails.length > 0" class="recipe-grid">
   <div *ngFor="let recipe of recipeDetails">
     <a (click)="goToRecipe(recipe.idMeal)">
@@ -7,4 +7,7 @@
       <p>{{ recipe.strMeal }}</p>
     </a>
   </div>
+</div>
+<div *ngIf="recipeDetails.length === 0" class="no-recipes">
+  <p>No hay recetas disponibles con la búsqueda realizada.</p>
 </div>
