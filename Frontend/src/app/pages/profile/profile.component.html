@@ -1,3 +1,11 @@
 <app-nav-profile></app-nav-profile>
-<p>{{username}}</p>
-<p>{{email}}</p>
+<main class="mt-3">
+    <p class="text-center">{{username}}</p>
+    <p class="text-center">{{email}}</p>
+    <div class="d-flex justify-content-center mb-3">
+        <button class="btn btn-outline-danger mx-3"  (click)="deleteProfile()">Eliminar perfil</button>
+        <button class="btn btn-outline-secondary mx-3" (click)="closeCurrentSession()">Cerrar sesión</button>
+    </div>
+    <h2 class="text-center">{{pedidos}}</h2>
+    <!--Aquí van los pedidos-->
+</main>
