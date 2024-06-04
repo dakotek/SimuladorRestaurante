@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class NavComponent {
 
-  constructor(private router : Router){}
+  constructor(private router: Router){}
 
   ngOnInit(){
 
@@ -22,4 +22,9 @@ export class NavComponent {
     this.router.navigateByUrl("/perfil")
   }
 
+  search(searchTerm: string): void {
+    localStorage.setItem('searchTerm', searchTerm);
+    localStorage.setItem('searchType', 'normal');
+    this.router.navigateByUrl("/busqueda");
+  }
 }

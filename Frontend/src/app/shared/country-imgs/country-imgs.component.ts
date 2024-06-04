@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-country-imgs',
@@ -7,4 +8,15 @@ import { Component } from '@angular/core';
 })
 export class CountryImgsComponent {
 
+  constructor(private router: Router){}
+
+  ngOnInit(){
+
+  }
+
+  search(searchTerm: string): void {
+    localStorage.setItem('searchTerm', searchTerm);
+    localStorage.setItem('searchType', 'area');
+    this.router.navigateByUrl("/busqueda");
+  }
 }
