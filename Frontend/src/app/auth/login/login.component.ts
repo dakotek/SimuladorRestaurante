@@ -10,35 +10,34 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit{
-  
-  loginForm=this.formBuilder.group({
-    email:['', [Validators.required, Validators.email]],
-    password:['', [Validators.required]],
-  })
+export class LoginComponent implements OnInit {
 
-  showPassword: boolean = false
-  errorMessage: string | null = null
-  token : string | null = null
+  loginForm = this.formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+  });
 
-  constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService, private jwtHelper : JwtHelperService) { }
+  showPassword: boolean = false;
+  errorMessage: string | null = null;
+  token: string | null = null;
 
-   ngOnInit(): void {
-    this.token = localStorage.getItem('token')
+  constructor(private formBuilder: FormBuilder, private router: Router, private loginService: LoginService, private jwtHelper: JwtHelperService) { }
 
-    if (this.jwtHelper.isTokenExpired(this.token)) {
-      this.errorMessage = 'La sesión ha expirado, inicia sesión de nuevo'
-      localStorage.clear()
-    }else{
-      if (localStorage.getItem('role') === 'CLIENT') {
+  ngOnInit(): void {
+    this.token = localStorage.getItem('token');
+
+    if (this.token && this.jwtHelper.isTokenExpired(this.token)) {
+      this.errorMessage = 'La sesión ha expirado, inicia sesión de nuevo';
+      localStorage.clear();
+    } else {
+      const role = localStorage.getItem('role');
+      if (role === 'CLIENT') {
         this.router.navigateByUrl('/cliente');
       }
-      if (localStorage.getItem('role') === 'COOK') {
+      if (role === 'COOK') {
         this.router.navigateByUrl('/cocinero');
       }
     }
-      
-
   }
 
   get email() {
@@ -57,9 +56,10 @@ export class LoginComponent implements OnInit{
     if (this.loginForm.valid) {
       this.loginService.login(this.loginForm.value as LoginRequest)
         .then(() => {
-          if (localStorage.getItem('role') === 'CLIENT') {
+          const role = localStorage.getItem('role');
+          if (role === 'CLIENT') {
             this.router.navigateByUrl('/cliente');
-          } else if (localStorage.getItem('role') === 'COOK') {
+          } else if (role === 'COOK') {
             this.router.navigateByUrl('/cocinero');
           }
           this.loginForm.reset();
