@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import es.metrica.mar24.SimuladorRestaurante.entities.Order;
+import es.metrica.mar24.SimuladorRestaurante.log.UpdateStatusRequest;
 import es.metrica.mar24.SimuladorRestaurante.services.OrderService;
 
 import java.util.List;
@@ -52,5 +53,35 @@ public class OrderController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestBody UpdateStatusRequest request) {
+        Order updatedOrder = orderService.updateOrderStatus(id, request.getStatus());
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @GetMapping("/pending")
+    public ResponseEntity<List<Order>> getPendingOrders() {
+        List<Order> pendingOrders = orderService.getPendingOrders();
+        return ResponseEntity.ok(pendingOrders);
+    }
+    
+    @GetMapping("/ready")
+    public ResponseEntity<List<Order>> getReadyOrders() {
+        List<Order> readyOrders = orderService.getReadyOrders();
+        return ResponseEntity.ok(readyOrders);
+    }
+    
+    @GetMapping("/collected")
+    public ResponseEntity<List<Order>> getCollecetedOrders() {
+        List<Order> collectedOrders = orderService.getCollectedOrders();
+        return ResponseEntity.ok(collectedOrders);
+    }
+
+    @GetMapping("/non-cancelled")
+    public ResponseEntity<List<Order>> getNonCancelledOrders() {
+        List<Order> nonCancelledOrders = orderService.getNonCancelledOrders();
+        return ResponseEntity.ok(nonCancelledOrders);
     }
 }
