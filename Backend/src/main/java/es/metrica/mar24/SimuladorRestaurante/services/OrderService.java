@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.metrica.mar24.SimuladorRestaurante.entities.Order;
+import es.metrica.mar24.SimuladorRestaurante.entities.OrderStatus;
 import es.metrica.mar24.SimuladorRestaurante.repositories.OrderRepository;
 
 import java.util.List;
@@ -34,4 +35,31 @@ public class OrderService {
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
     }
+    
+    public List<Order> getPendingOrders() {
+        return orderRepository.findByStatus(OrderStatus.PENDING);
+    }
+    
+    public List<Order> getReadyOrders() {
+        return orderRepository.findByStatus(OrderStatus.READY);
+    }
+
+    public List<Order> getNonCancelledOrders() {
+        return orderRepository.findByStatusNot(OrderStatus.CANCELLED);
+    }
+    
+    public Order updateOrderStatus(Long id, OrderStatus status) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setStatus(status);
+            return orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Order not found");
+        }
+    }
+
+	public List<Order> getCollectedOrders() {
+		return orderRepository.findByStatusNot(OrderStatus.COLLECTED);
+	}
 }
