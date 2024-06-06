@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { DeleteService } from '../../services/deleteUser';
+import { HttpClient } from '@angular/common/http';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +16,15 @@ export class ProfileComponent {
   token : string | null = null
   pedidos : string | null = null
 
-  constructor(private jwtHelper : JwtHelperService, private router: Router, private deleteUser : DeleteService){}
+  orders: any[] = [];
+  private pollingSubscription: Subscription | undefined;
+
+  constructor(
+    private jwtHelper : JwtHelperService,
+    private router: Router,
+    private deleteUser : DeleteService,
+    private http: HttpClient
+  ){}
 
   ngOnInit() : void{
     this.token = localStorage.getItem('token')
@@ -31,15 +41,23 @@ export class ProfileComponent {
     } else {
       this.pedidos = 'Pedidos completados:'
     }
-  }
 
-  ngOnChange() : void{
-
+    this.getOrders();
+    // Refrescar cada 5 segundos
+    this.pollingSubscription = interval(5000).subscribe(() => {
+      this.getOrders();
+    });
   }
 
   closeCurrentSession() : void{
       localStorage.clear()
       this.router.navigateByUrl("/inicio-sesion")
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   deleteProfile() : void{
@@ -54,8 +72,14 @@ export class ProfileComponent {
     })
   }
 
-  fetchPrueba(){
-    
+  getOrders(): void {
+    const client = Number(localStorage.getItem('userId'));
+  
+    this.http.get<any[]>('http://localhost:9000/auth/orders')
+      .subscribe(response => {
+        console.log(response);
+        this.orders = response.filter(order => order.status === 'COLLECTED' && order.client === client);
+        this.orders = this.orders.map(order => `${order.id} - ${order.status}`);
+    });
   }
-
 }

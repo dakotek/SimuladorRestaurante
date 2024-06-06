@@ -4,7 +4,15 @@
 <div class="container">
     <div class="column-left">
         <h3>Pedidos</h3>
-    </div>
+        <ul>
+            <li *ngFor="let order of orders">
+                {{ order }}
+            </li>
+            <div *ngIf="orders.length === 0">
+                No hay pedidos en proceso
+            </div>
+        </ul>
+    </div>    
     <div class="divider"></div>
     <div class="column-right">
         <div class="image-grid">
