@@ -8,10 +8,18 @@
             <li *ngFor="let order of orders">
                 Pedido Nº-{{ order.id }}
                 <ul>
-                    <li>
-                        {{ order.status }}
-                        <button *ngIf="order.status === 'PENDING'" (click)="cancelOrder(order.id)">CANCELAR</button>
-                        <button *ngIf="order.status === 'READY'" (click)="collectOrder(order.id)">RECOGER</button>
+                    <li [ngSwitch]="order.status">
+                        <span *ngSwitchCase="'PENDING'">
+                            Mandando a cocina...
+                            <button (click)="cancelOrder(order.id)">CANCELAR</button>
+                        </span>
+                        <span *ngSwitchCase="'READY'">
+                            Listo para recoger...
+                            <button (click)="collectOrder(order.id)">RECOGER</button>
+                        </span>
+                        <span *ngSwitchCase="'IN_PREPARATION'">
+                            En preparación...
+                        </span>
                     </li>
                     <br>
                 </ul>
