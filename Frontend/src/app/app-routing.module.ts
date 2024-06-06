@@ -7,6 +7,7 @@ import { DashboardCookComponent } from './pages/dashboardCook/dashboardCook.comp
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RecipeComponent } from './pages/recipe/recipe.component';
 import { SearchedRecipesComponent } from './pages/searched-recipes/searched-recipes.component';
+import { DetailedRecipeComponent } from './pages/detailed-recipe/detailed-recipe.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/inicio-sesion', pathMatch: 'full'},
@@ -16,7 +17,8 @@ const routes: Routes = [
   {path: 'registro', component:RegisterComponent},
   {path: 'perfil', component:ProfileComponent},
   {path: 'receta', component:RecipeComponent},
-  {path: 'busqueda', component:SearchedRecipesComponent}
+  {path: 'busqueda', component:SearchedRecipesComponent},
+  {path: 'receta-detallada', component:DetailedRecipeComponent}
 ];
 
 @NgModule({

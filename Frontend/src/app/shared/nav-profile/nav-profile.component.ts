@@ -17,8 +17,10 @@ export class NavProfileComponent {
   goBack() : void{
     if (localStorage.getItem('role') === 'CLIENT') {
       this.router.navigateByUrl('/cliente')
+    }else{
+      this.router.navigateByUrl('/cocinero')
     }
-    this.router.navigateByUrl('/cocinero')
+    
   }
 
 }

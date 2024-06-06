@@ -1,2 +1,18 @@
 <app-nav-without-search></app-nav-without-search>
-<br><br><h1>VISTA COCINERO</h1>
+<div class="container mt-4">
+    <div class="column-left">
+        <h3>Mis comandas</h3>
+    </div>
+    <div class="divider"></div>
+    <div class="column-right">
+        <h3 class="mb-4">Pedidos pendientes</h3>
+        <div class="row">
+            <div class="col-md-4" *ngFor="let dish of pendingDishes">
+                <a (click)="goToRecipe(dish.id, dish.recipe, dish.status)">
+                    <img class="w-100 mb-1" [src]="dish.img" [alt]="dish.name">
+                    <p>{{ dish.name }}</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
