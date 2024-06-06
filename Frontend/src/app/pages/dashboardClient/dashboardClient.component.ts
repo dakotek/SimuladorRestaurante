@@ -9,7 +9,7 @@ import { infoRecipe } from '../recipe/infoRecipe';
 @Component({
   selector: 'app-dashboardClient',
   templateUrl: './dashboardClient.component.html',
-  styleUrl: './dashboardClient.component.css'
+  styleUrls: ['./dashboardClient.component.css']
 })
 export class DashboardClientComponent implements OnInit, OnDestroy {
 
@@ -18,11 +18,11 @@ export class DashboardClientComponent implements OnInit, OnDestroy {
   private pollingSubscription: Subscription | undefined;
 
   constructor(
-    private router:Router,
+    private router: Router,
     private jwtHelper: JwtHelperService,
-    private infoRecipe:infoRecipe,
+    private infoRecipe: infoRecipe,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
@@ -33,7 +33,7 @@ export class DashboardClientComponent implements OnInit, OnDestroy {
     if (localStorage.getItem('role') === "COOK") {
       this.router.navigateByUrl('/cocinero');
     }
-  
+
     this.getOrders();
     // Refrescar cada 5 segundos
     this.pollingSubscription = interval(5000).subscribe(() => {
@@ -54,12 +54,34 @@ export class DashboardClientComponent implements OnInit, OnDestroy {
 
   getOrders(): void {
     const client = Number(localStorage.getItem('userId'));
-  
+
     this.http.get<any[]>('http://localhost:9000/auth/orders')
       .subscribe(response => {
-        console.log(response);
         this.orders = response.filter(order => order.status !== 'CANCELLED' && order.status !== 'COLLECTED' && order.client === client);
-        this.orders = this.orders.map(order => `${order.id} - ${order.status}`);
-    });
+      });
+  }
+
+  cancelOrder(orderId: number) {
+    const newStatus = 'CANCELLED';
+    this.updateOrderStatus(orderId, newStatus);
+  }
+
+  collectOrder(orderId: number) {
+    const newStatus = 'COLLECTED';
+    this.updateOrderStatus(orderId, newStatus);
+  }
+
+  updateOrderStatus(orderId: number, newStatus: string) {
+    const url = `http://localhost:9000/auth/orders/${orderId}/status`;
+    const request = { status: newStatus };
+    this.http.put(url, request)
+      .subscribe(
+        (response: any) => {
+          this.getOrders();
+        },
+        (error: any) => {
+          console.error('Error al actualizar el estado del pedido:', error);
+        }
+      );
   }
 }

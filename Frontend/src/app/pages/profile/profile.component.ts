@@ -77,7 +77,6 @@ export class ProfileComponent {
   
     this.http.get<any[]>('http://localhost:9000/auth/orders')
       .subscribe(response => {
-        console.log(response);
         this.orders = response.filter(order => order.status === 'COLLECTED' && (order.client === client || order.cook === client));
         this.orders = this.orders.map(order => `${order.id} - ${order.status}`);
     });
