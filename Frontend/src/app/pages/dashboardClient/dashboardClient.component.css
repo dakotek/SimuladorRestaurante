@@ -36,9 +36,10 @@ body {
     overflow: hidden;
 }
 
-h3 {
+h2 {
     text-align: center;
     margin: 10px 0;
+    text-decoration: underline;
 }
 
 .image-grid {

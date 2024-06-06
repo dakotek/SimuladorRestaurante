@@ -1,7 +1,7 @@
 .orders ul {
-    list-style-position: inside; /* Mueve el marcador de lista dentro del contenedor de lista */
+    list-style-position: inside;
 }
 
 .orders li {
-    text-align: center; /* Centra el texto dentro de cada elemento de la lista */
+    text-align: center;
 }
