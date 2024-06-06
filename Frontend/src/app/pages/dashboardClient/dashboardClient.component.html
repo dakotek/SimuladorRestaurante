@@ -11,11 +11,11 @@
                     <li [ngSwitch]="order.status">
                         <span *ngSwitchCase="'PENDING'">
                             Mandando a cocina...
-                            <button (click)="cancelOrder(order.id)">CANCELAR</button>
+                            <button class="cancell-button" (click)="cancelOrder(order.id)">CANCELAR</button>
                         </span>
                         <span *ngSwitchCase="'READY'">
                             Listo para recoger...
-                            <button (click)="collectOrder(order.id)">RECOGER</button>
+                            <button class="collect-button" (click)="collectOrder(order.id)">RECOGER</button>
                         </span>
                         <span *ngSwitchCase="'IN_PREPARATION'">
                             En preparación...
