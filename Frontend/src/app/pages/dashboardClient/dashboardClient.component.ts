@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClient } from '@angular/common/http';
+import { interval, Subscription } from 'rxjs';
 
 import { infoRecipe } from '../recipe/infoRecipe';
 
@@ -10,10 +11,11 @@ import { infoRecipe } from '../recipe/infoRecipe';
   templateUrl: './dashboardClient.component.html',
   styleUrl: './dashboardClient.component.css'
 })
-export class DashboardClientComponent implements OnInit{
+export class DashboardClientComponent implements OnInit, OnDestroy {
 
   token: string | null = null;
   orders: any[] = [];
+  private pollingSubscription: Subscription | undefined;
 
   constructor(
     private router:Router,
@@ -23,7 +25,7 @@ export class DashboardClientComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.token = localStorage.getItem('token')
+    this.token = localStorage.getItem('token');
 
     if (this.jwtHelper.isTokenExpired(this.token)) {
       this.router.navigateByUrl('/inicio-sesion');
@@ -33,6 +35,16 @@ export class DashboardClientComponent implements OnInit{
     }
   
     this.getOrders();
+    // Refrescar cada 5 segundos
+    this.pollingSubscription = interval(5000).subscribe(() => {
+      this.getOrders();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   goToRecipe(idRecipe: string) {
