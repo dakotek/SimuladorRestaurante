@@ -20,13 +20,11 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private User client;
+    @Column(name = "client_id")
+    private Long client;
 
-    @ManyToOne
-    @JoinColumn(name = "cook_id")
-    private User cook;
+    @Column(name = "cook_id")
+    private Long cook;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -38,7 +36,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(User client, User cook, OrderStatus status, String recipe) {
+    public Order(Long client, Long cook, OrderStatus status, String recipe) {
         this.client = client;
         this.cook = cook;
         this.status = status;
@@ -55,19 +53,19 @@ public class Order {
 		
 	}
 
-    public User getClient() {
+    public Long getClient() {
         return client;
     }
 
-    public void setClient(User client) {
+    public void setClient(Long client) {
         this.client = client;
     }
 
-    public User getCook() {
+    public Long getCook() {
         return cook;
     }
 
-    public void setCook(User cook) {
+    public void setCook(Long cook) {
         this.cook = cook;
     }
 
@@ -88,17 +86,17 @@ public class Order {
     }
 
     public static class OrderBuilder {
-        private User client;
-        private User cook;
+        private long client;
+        private long cook;
         private OrderStatus status;
         private String recipe;
 
-        public OrderBuilder client(User client) {
+        public OrderBuilder client(long client) {
             this.client = client;
             return this;
         }
 
-        public OrderBuilder cook(User cook) {
+        public OrderBuilder cook(long cook) {
             this.cook = cook;
             return this;
         }

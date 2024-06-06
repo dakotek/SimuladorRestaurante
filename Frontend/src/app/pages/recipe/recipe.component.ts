@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { infoRecipe } from '../recipe/infoRecipe';
 import { HttpClient } from '@angular/common/http';
+import { OrderRequest } from '../../services/auth/orderRequest';
+import { OrderService } from '../../services/auth/order.service';
 
 @Component({
   selector: 'app-recipe',
@@ -12,7 +14,12 @@ import { HttpClient } from '@angular/common/http';
 export class RecipeComponent implements OnInit {
   recipeDetails: any;
 
-  constructor(private route: ActivatedRoute, private router: Router, private infoRecipe: infoRecipe, public http: HttpClient) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private http: HttpClient,
+    private orderService: OrderService
+  ) { }
 
   ngOnInit() {
     const idRecipe = localStorage.getItem('recetaSelecc');
@@ -42,5 +49,29 @@ export class RecipeComponent implements OnInit {
 
   menuPrincipal() {
     this.router.navigateByUrl('/cliente');
+  }
+
+  encargarPedido() {
+    const recipe = localStorage.getItem('recetaSelecc');
+    const client = localStorage.getItem('userId');
+    const status = 'PENDING';
+
+    if (recipe && client) {
+      const orderRequest: OrderRequest = {
+        client: client,
+        cook: '',
+        status: status,
+        recipe: recipe
+      };
+
+      this.orderService.createOrder(orderRequest).then(response => {
+        console.log('Order created successfully', response);
+        this.router.navigateByUrl('/cliente');
+      }).catch(error => {
+        console.error('Error creating order', error);
+      });
+    } else {
+      console.error('No se pudo obtener la receta o el cliente del localStorage');
+    }
   }
 }
