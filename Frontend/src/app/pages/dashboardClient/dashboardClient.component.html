@@ -6,7 +6,15 @@
         <h3>Pedidos</h3>
         <ul>
             <li *ngFor="let order of orders">
-                {{ order }}
+                Pedido Nº-{{ order.id }}
+                <ul>
+                    <li>
+                        {{ order.status }}
+                        <button *ngIf="order.status === 'PENDING'" (click)="cancelOrder(order)">CANCELAR</button>
+                        <button *ngIf="order.status === 'READY'" (click)="collectOrder(order)">RECOGER</button>
+                    </li>
+                    <br>
+                </ul>
             </li>
             <div *ngIf="orders.length === 0">
                 No hay pedidos en proceso
