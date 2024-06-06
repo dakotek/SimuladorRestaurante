@@ -72,15 +72,12 @@ export class DashboardClientComponent implements OnInit, OnDestroy {
   }
 
   updateOrderStatus(orderId: number, newStatus: string) {
-    const idOrder = String(orderId);
-
-    const url = 'http://localhost:9000/auth/orders/' + idOrder.toString() + '/status';
+    const url = `http://localhost:9000/auth/orders/${orderId}/status`;
     const request = { status: newStatus };
-    const requestBody = JSON.stringify(request); // Convertir el objeto request a una cadena JSON
-    this.http.put(url, requestBody)
+    this.http.put(url, request)
       .subscribe(
         (response: any) => {
-          console.log('Estado del pedido actualizado:', response);
+          this.getOrders();
         },
         (error: any) => {
           console.error('Error al actualizar el estado del pedido:', error);
