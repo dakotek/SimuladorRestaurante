@@ -7,5 +7,14 @@
         <button class="btn btn-outline-secondary mx-3" (click)="closeCurrentSession()">Cerrar sesión</button>
     </div>
     <h2 class="text-center">{{pedidos}}</h2>
-    <!--Aquí van los pedidos-->
+    <div class="orders">
+        <ul>
+            <li *ngFor="let order of orders">
+                {{ order }}
+            </li>
+            <li *ngIf="orders.length === 0">
+                No hay pedidos completados
+            </li>
+        </ul>
+    </div>
 </main>
