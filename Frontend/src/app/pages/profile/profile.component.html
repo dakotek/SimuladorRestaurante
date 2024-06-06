@@ -10,7 +10,7 @@
     <div class="orders">
         <ul>
             <li *ngFor="let order of orders">
-                {{ order }}
+                #{{ order.id.toString().padStart(4, '0') }} - {{ order.recipeName }}
             </li>
             <li *ngIf="orders.length === 0">
                 No hay pedidos completados

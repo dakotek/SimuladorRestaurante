@@ -5,3 +5,7 @@
 .orders li {
     text-align: center;
 }
+
+h2 {
+    text-decoration: underline;
+}
