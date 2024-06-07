@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subscription, interval } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboardCook',
@@ -40,14 +39,18 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
         }
         return response.json();
     })
-    .then(data => console.log(data))
+    .then(data => {
+      console.log(data)
+      localStorage.setItem('recetaIdBBDD', data.id);
+      localStorage.setItem('recetaSelec', data.recipe);
+    })
+    .then( () =>
+      this.getRecipeDetails(localStorage.getItem('recetaSelec')!)
+    )
     .catch(error => console.error('Error:', error));
     }
 
-    if (localStorage.getItem('recetaSelec')) {
-      this.getRecipeDetails(localStorage.getItem('recetaSelec')!)
-    }
-    
+
     this.pollingSubscription = interval(5000).subscribe(() => {
       this.getPendingDishes();
     });
@@ -81,37 +84,33 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
     });
   }
 
-  pickOrder(id: number, recipe: string) {
+  async pickOrder(id: number, recipe: string) {
     if (!localStorage.getItem('recetaSelec')) {
-      localStorage.setItem('recetaIdBBDD', id.toString());
-      localStorage.setItem('recetaSelec', recipe);
-      const url1 = `http://localhost:9000/auth/orders/${id}/status`;
-      const request1 = { status: 'IN_PREPARATION' };
-      const url2 = `http://localhost:9000/auth/orders/assign-cook/${id}`;
-      const cookId = localStorage.getItem("userId");
-      const request2 = { cookId: cookId };
+      try {
+        localStorage.setItem('recetaIdBBDD', id.toString());
+        localStorage.setItem('recetaSelec', recipe);
+        
+        const url1 = `http://localhost:9000/auth/orders/${id}/status`;
+        const request1 = { status: 'IN_PREPARATION' };
   
-      forkJoin([
-        this.http.put(url1, request1),
-        fetch(url2, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(request2)
-        })
-      ]).subscribe(
-        ([response1, response2]) => {
-          console.log("Ambas solicitudes completadas correctamente");
-          this.getPendingDishes();
-          this.getRecipeDetails(recipe);
-        },
-        (error) => {
-          console.error('Error en alguna de las solicitudes:', error);
-        }
-      );
+        await this.http.put(url1, request1).toPromise();
+  
+        const cookId = localStorage.getItem("userId");
+        const url2 = `http://localhost:9000/auth/orders/assign-cook/${id}?cookId=${cookId}`;
+        
+        await fetch(url2, {
+          method: 'PUT'
+        });
+  
+        console.log("Ambas solicitudes completadas correctamente");
+        this.getPendingDishes();
+        this.getRecipeDetails(recipe);
+      } catch (error) {
+        console.error('Error en alguna de las solicitudes:', error);
+      }
     }
   }
+  
 
   getRecipeDetails(idRecipe: string) {
     this.http.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipe}`)
