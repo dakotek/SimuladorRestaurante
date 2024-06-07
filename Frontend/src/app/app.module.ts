@@ -18,7 +18,6 @@ import { NavProfileComponent } from './shared/nav-profile/nav-profile.component'
 import { RecipeComponent } from './pages/recipe/recipe.component';
 import { SearchedRecipesComponent } from './pages/searched-recipes/searched-recipes.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { DetailedRecipeComponent } from './pages/detailed-recipe/detailed-recipe.component';
 
 @NgModule({
   declarations: [
@@ -34,8 +33,7 @@ import { DetailedRecipeComponent } from './pages/detailed-recipe/detailed-recipe
     ProfileComponent,
     NavProfileComponent,
     RecipeComponent,
-    SearchedRecipesComponent,
-    DetailedRecipeComponent
+    SearchedRecipesComponent
   ],
   imports: [
     BrowserModule,
