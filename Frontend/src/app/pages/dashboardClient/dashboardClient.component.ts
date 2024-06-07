@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClient } from '@angular/common/http';
-import { interval, Subscription } from 'rxjs';
-
-import { infoRecipe } from '../recipe/infoRecipe';
+import { forkJoin, interval, of, Subscription } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboardClient',
@@ -20,7 +19,6 @@ export class DashboardClientComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private jwtHelper: JwtHelperService,
-    private infoRecipe: infoRecipe,
     private http: HttpClient
   ) { }
 
@@ -56,9 +54,33 @@ export class DashboardClientComponent implements OnInit, OnDestroy {
     const client = Number(localStorage.getItem('userId'));
 
     this.http.get<any[]>('http://localhost:9000/auth/orders')
-      .subscribe(response => {
-        this.orders = response.filter(order => order.status !== 'CANCELLED' && order.status !== 'COLLECTED' && order.client === client);
+      .pipe(
+        switchMap(orders => {
+          const clientOrders = orders.filter(order => order.status !== 'CANCELLED' && order.status !== 'COLLECTED' && order.client === client);
+          return this.addRecipeNamesToOrders(clientOrders);
+        })
+      )
+      .subscribe(updatedOrders => {
+        this.orders = updatedOrders;
       });
+  }
+
+  addRecipeNamesToOrders(orders: any[]) {
+    const requests = orders.map(order =>
+      this.getRecipeDetails(order.recipe).pipe(
+        map(recipeDetails => {
+          order.recipeName = recipeDetails.meals[0].strMeal;
+          return order;
+        })
+      )
+    );
+    return requests.length ? forkJoin(requests) : of([]);
+  }
+
+  getRecipeDetails(idRecipe: string) {
+    return this.http.get<{ meals: any[] }>(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipe}`).pipe(
+      map(response => response)
+    );
   }
 
   cancelOrder(orderId: number) {
