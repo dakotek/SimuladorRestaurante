@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Subscription, interval } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboardCook',
@@ -30,6 +31,19 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
     }
     this.getPendingDishes()
 
+    if (!localStorage.getItem('recetaSelec')) {
+      const id = localStorage.getItem("userId")
+      fetch(`http://localhost:9000/auth/orders/in-preparation/cook/${id}`)
+      .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+    }
+
     if (localStorage.getItem('recetaSelec')) {
       this.getRecipeDetails(localStorage.getItem('recetaSelec')!)
     }
@@ -47,7 +61,6 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
   }
 
   getPendingDishes(): void {
-    //console.log(this.pendingDishes)
     this.http.get<any[]>('http://localhost:9000/auth/orders/pending')
       .subscribe(response => {
         this.pendingDishes =  response.filter(dish => dish.cook == null)
@@ -68,29 +81,41 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
     });
   }
 
-  pickOrder(id : number, recipe : string) {
+  pickOrder(id: number, recipe: string) {
     if (!localStorage.getItem('recetaSelec')) {
       localStorage.setItem('recetaIdBBDD', id.toString());
       localStorage.setItem('recetaSelec', recipe);
-      const url =  `http://localhost:9000/auth/orders/${id}/status`;
-      const request = { status: "IN_PREPARATION" };
-      this.http.put(url, request)
-      .subscribe(
-        () => {
+      const url1 = `http://localhost:9000/auth/orders/${id}/status`;
+      const request1 = { status: 'IN_PREPARATION' };
+      const url2 = `http://localhost:9000/auth/orders/assign-cook/${id}`;
+      const cookId = localStorage.getItem("userId");
+      const request2 = { cookId: cookId };
+  
+      forkJoin([
+        this.http.put(url1, request1),
+        fetch(url2, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(request2)
+        })
+      ]).subscribe(
+        ([response1, response2]) => {
+          console.log("Ambas solicitudes completadas correctamente");
           this.getPendingDishes();
+          this.getRecipeDetails(recipe);
         },
         (error) => {
-          console.error('Error al actualizar el estado del pedido:', error);
+          console.error('Error en alguna de las solicitudes:', error);
         }
       );
-      this.getRecipeDetails(recipe)
     }
   }
 
   getRecipeDetails(idRecipe: string) {
     this.http.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipe}`)
       .subscribe(response=> {
-        console.log(response)
         this.recipeDetails = response;
       });
   }
