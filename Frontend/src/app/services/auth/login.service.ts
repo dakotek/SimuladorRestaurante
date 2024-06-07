@@ -39,7 +39,7 @@ export class LoginService {
 
       });
     }).catch(error => {
-      throw new Error(error.message || 'No se pudo conectar al servidor');
+      throw new Error('El email o la contraseña son incorrectos');
     });
   }
 }

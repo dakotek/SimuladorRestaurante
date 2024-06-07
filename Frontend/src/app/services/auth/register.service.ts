@@ -24,7 +24,7 @@ export class RegisterService {
       }
       return response.json();
     }).catch(error => {
-      throw new Error(error.message || 'No se pudo conectar al servidor');
+      throw new Error('El correo ya existe');
     });
   }
 }
