@@ -38,9 +38,9 @@ export class ProfileComponent {
     this.email = localStorage.getItem("email")
     const role = localStorage.getItem('role')
     if (role === "CLIENT") {
-      this.pedidos = 'Historial de pedidos realizados:'
+      this.pedidos = 'Historial de pedidos recogidos:'
     } else {
-      this.pedidos = 'Historial de pedidos completados:'
+      this.pedidos = 'Historial de comandas completadas:'
     }
 
     this.getOrders();
