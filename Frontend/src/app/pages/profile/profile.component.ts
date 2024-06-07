@@ -79,7 +79,7 @@ export class ProfileComponent {
     this.http.get<any[]>('http://localhost:9000/auth/orders')
       .pipe(
         switchMap(orders => {
-          const clientOrders = orders.filter(order => order.status !== 'CANCELLED' && order.status !== 'COLLECTED' && order.client === client);
+          const clientOrders = orders.filter(order => order.status === 'COLLECTED' && (order.client === client || order.cook === client));
           return this.addRecipeNamesToOrders(clientOrders);
         })
       )
