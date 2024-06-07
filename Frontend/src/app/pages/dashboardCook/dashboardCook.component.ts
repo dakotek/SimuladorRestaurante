@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { CookService } from '../../services/cookService';
+import { Subscription, interval } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboardCook',
   templateUrl: './dashboardCook.component.html',
   styleUrl: './dashboardCook.component.css'
 })
-export class DashboardCookComponent implements OnInit{
+export class DashboardCookComponent implements OnInit, OnDestroy{
 
-  token: string | null = null;
+  private token: string | null = null;
   pendingDishes : any[] = []
+  private pollingSubscription: Subscription | undefined;
+  recipeDetails: any | null = null;
 
-  constructor(private router:Router, private jwtHelper: JwtHelperService, private cookService: CookService) {}
+  constructor(private router:Router, private jwtHelper: JwtHelperService, private http : HttpClient) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token')
@@ -25,44 +28,105 @@ export class DashboardCookComponent implements OnInit{
     if (localStorage.getItem('role') === "CLIENT") {
       this.router.navigateByUrl('/cliente');
     }
-
     this.getPendingDishes()
 
-    /*
-    setInterval(() => {
+    if (localStorage.getItem('recetaSelec')) {
+      this.getRecipeDetails(localStorage.getItem('recetaSelec')!)
+    }
+    
+    this.pollingSubscription = interval(5000).subscribe(() => {
       this.getPendingDishes();
-    }, 30000);
-    */
+    });
+    
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   getPendingDishes(): void {
-    console.log(this.pendingDishes)
-    this.cookService.getPendingDishes().subscribe(dishes => {
-      for (let i = 0; i < dishes.length; i++) {
-        const dish = dishes[i];
-        fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${dish.recipe}`)
-        .then((response : Response)  => {
-          if (!response.ok) {
-            throw new Error('Error getting response');
-          }
-          return response.json();
-        })
-        .then(data => {
-          //console.log(data.meals[0])
-          dish["name"] = data.meals[0].strMeal
-          dish["img"] = data.meals[0].strMealThumb
-        })
-        this.pendingDishes.push(dish);
-      }
+    //console.log(this.pendingDishes)
+    this.http.get<any[]>('http://localhost:9000/auth/orders/pending')
+      .subscribe(response => {
+        this.pendingDishes =  response.filter(dish => dish.cook == null)
+        this.pendingDishes.map(dish => 
+          fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${dish.recipe}`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Error getting response');
+              }
+              return response.json();
+            })
+            .then(data => {
+              dish.img = data.meals[0].strMealThumb;
+              return dish;
+            })
+        );
+
     });
   }
 
-  goToRecipe(id : number, recipe : string, status : string) {
-    localStorage.setItem('recetaIdBBDD', id.toString());
-    localStorage.setItem('recetaSelec', recipe);
-    localStorage.setItem('recetaEstado', status);
+  pickOrder(id : number, recipe : string) {
+    if (!localStorage.getItem('recetaSelec')) {
+      localStorage.setItem('recetaIdBBDD', id.toString());
+      localStorage.setItem('recetaSelec', recipe);
+      const url =  `http://localhost:9000/auth/orders/${id}/status`;
+      const request = { status: "IN_PREPARATION" };
+      this.http.put(url, request)
+      .subscribe(
+        () => {
+          this.getPendingDishes();
+        },
+        (error) => {
+          console.error('Error al actualizar el estado del pedido:', error);
+        }
+      );
+      this.getRecipeDetails(recipe)
+    }
+  }
 
-    this.router.navigateByUrl('/receta-detallada');
+  getRecipeDetails(idRecipe: string) {
+    this.http.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipe}`)
+      .subscribe(response=> {
+        console.log(response)
+        this.recipeDetails = response;
+      });
+  }
+
+  getIngredients(): string[] {
+    const ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+      const ingredient = this.recipeDetails.meals[0][`strIngredient${i}`];
+      const measure = this.recipeDetails.meals[0][`strMeasure${i}`];
+      if (ingredient) {
+        ingredients.push(measure+" of "+ingredient);
+      }
+    }
+    return ingredients;
+  }
+
+  getIntructions(){
+    return this.recipeDetails.meals[0][`strInstructions`];
+  }
+
+  finishOrder(){
+    const id = localStorage.getItem('recetaIdBBDD')
+    const url = `http://localhost:9000/auth/orders/${id}/status`;
+      const request = { status: "READY" };
+      this.http.put(url, request)
+      .subscribe(
+        () => {
+          this.getPendingDishes();
+        },
+        (error) => {
+          console.error('Error al actualizar el estado del pedido:', error);
+        }
+      );
+    localStorage.removeItem('recetaSelec')
+    localStorage.removeItem('recetaIdBBDD')
+    this.recipeDetails = null
   }
 
 }
