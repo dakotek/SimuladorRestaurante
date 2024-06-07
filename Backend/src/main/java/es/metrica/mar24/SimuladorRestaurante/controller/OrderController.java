@@ -85,8 +85,8 @@ public class OrderController {
         return ResponseEntity.ok(nonCancelledOrders);
     }
     
-    @PostMapping("/assign-cook")
-    public String assignCookToRecipe(@RequestParam Long orderId, @RequestParam Long cookId) {
+    @PutMapping("/assign-cook/{orderId}")
+    public String assignCookToRecipe(@PathVariable Long orderId, @RequestParam Long cookId) {
         try {
             Order order = orderService.assignCookToRecipe(orderId, cookId);
             return "Cook assigned: " + order.toString();
@@ -96,13 +96,9 @@ public class OrderController {
     }
     
     @GetMapping("/in-preparation/cook/{cookId}")
-    public String getOrderInPreparationByCook(@PathVariable Long cookId) {
-        Optional<Order> order = orderService.getOrderInPreparationByCook(cookId);
+    public ResponseEntity<Order> getOrderInPreparationByCook(@PathVariable Long cookId) {
+        Order order = orderService.getOrderInPreparationByCook(cookId);
         
-        if (order.isPresent()) {
-            return "Order found: " + order.get().toString();
-        } else {
-            return "Order not found";
-        }
+        return ResponseEntity.ok(order);
     }
 }

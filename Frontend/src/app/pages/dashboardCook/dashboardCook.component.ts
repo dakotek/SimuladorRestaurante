@@ -30,10 +30,27 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
     }
     this.getPendingDishes()
 
-    if (localStorage.getItem('recetaSelec')) {
+    if (!localStorage.getItem('recetaSelec')) {
+      const id = localStorage.getItem("userId")
+      fetch(`http://localhost:9000/auth/orders/in-preparation/cook/${id}`)
+      .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+      console.log(data)
+      localStorage.setItem('recetaIdBBDD', data.id);
+      localStorage.setItem('recetaSelec', data.recipe);
+    })
+    .then( () =>
       this.getRecipeDetails(localStorage.getItem('recetaSelec')!)
+    )
+    .catch(error => console.error('Error:', error));
     }
-    
+
+
     this.pollingSubscription = interval(5000).subscribe(() => {
       this.getPendingDishes();
     });
@@ -47,7 +64,6 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
   }
 
   getPendingDishes(): void {
-    //console.log(this.pendingDishes)
     this.http.get<any[]>('http://localhost:9000/auth/orders/pending')
       .subscribe(response => {
         this.pendingDishes =  response.filter(dish => dish.cook == null)
@@ -68,29 +84,37 @@ export class DashboardCookComponent implements OnInit, OnDestroy{
     });
   }
 
-  pickOrder(id : number, recipe : string) {
+  async pickOrder(id: number, recipe: string) {
     if (!localStorage.getItem('recetaSelec')) {
-      localStorage.setItem('recetaIdBBDD', id.toString());
-      localStorage.setItem('recetaSelec', recipe);
-      const url =  `http://localhost:9000/auth/orders/${id}/status`;
-      const request = { status: "IN_PREPARATION" };
-      this.http.put(url, request)
-      .subscribe(
-        () => {
-          this.getPendingDishes();
-        },
-        (error) => {
-          console.error('Error al actualizar el estado del pedido:', error);
-        }
-      );
-      this.getRecipeDetails(recipe)
+      try {
+        localStorage.setItem('recetaIdBBDD', id.toString());
+        localStorage.setItem('recetaSelec', recipe);
+        
+        const url1 = `http://localhost:9000/auth/orders/${id}/status`;
+        const request1 = { status: 'IN_PREPARATION' };
+  
+        await this.http.put(url1, request1).toPromise();
+  
+        const cookId = localStorage.getItem("userId");
+        const url2 = `http://localhost:9000/auth/orders/assign-cook/${id}?cookId=${cookId}`;
+        
+        await fetch(url2, {
+          method: 'PUT'
+        });
+  
+        console.log("Ambas solicitudes completadas correctamente");
+        this.getPendingDishes();
+        this.getRecipeDetails(recipe);
+      } catch (error) {
+        console.error('Error en alguna de las solicitudes:', error);
+      }
     }
   }
+  
 
   getRecipeDetails(idRecipe: string) {
     this.http.get(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idRecipe}`)
       .subscribe(response=> {
-        console.log(response)
         this.recipeDetails = response;
       });
   }

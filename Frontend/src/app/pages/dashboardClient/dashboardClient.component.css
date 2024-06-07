@@ -83,3 +83,7 @@ button {
 .cancell-button:hover {
     background-color: #c82333;
 }
+
+.pointer:hover{
+    cursor: pointer;
+}

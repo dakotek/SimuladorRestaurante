@@ -13,5 +13,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     List<Order> findByStatusNot(OrderStatus status);
     
-    Optional<Order> findByCookAndStatus(Long cookId, OrderStatus status);
+    Order findByCookAndStatus(Long cookId, OrderStatus status);
 }

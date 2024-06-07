@@ -75,7 +75,7 @@ public class OrderService {
         }
     }
 	
-	public Optional<Order> getOrderInPreparationByCook(Long cookId) {
+	public Order getOrderInPreparationByCook(Long cookId) {
         return orderRepository.findByCookAndStatus(cookId, OrderStatus.IN_PREPARATION);
     }
 }
