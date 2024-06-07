@@ -1,2 +1,64 @@
 <app-nav></app-nav>
 <app-country-imgs></app-country-imgs>
+<br>
+<div class="container">
+    <div class="column-left">
+        <h2>Mis pedidos</h2>
+        <br>
+        <ul class="orders-list">
+            <li *ngFor="let order of orders" class="order-item">
+                <b class="order-recipe-name">{{ order.recipeName }}</b>
+                <ul class="order-details">
+                    <li class="order-id">
+                        Nº de pedido - #{{ order.id.toString().padStart(4, '0') }}
+                    </li>                    
+                    <li [ngSwitch]="order.status">
+                        <span *ngSwitchCase="'PENDING'">
+                            Mandando a cocina...
+                            <button class="cancell-button" (click)="cancelOrder(order.id)">CANCELAR</button>
+                        </span>
+                        <span *ngSwitchCase="'READY'">
+                            Listo para recoger...
+                            <button class="collect-button" (click)="collectOrder(order.id)">RECOGER</button>
+                        </span>
+                        <span *ngSwitchCase="'IN_PREPARATION'">
+                            En preparación...
+                        </span>
+                    </li>
+                </ul>
+            </li>
+            <div *ngIf="orders.length === 0" class="no-orders">
+                No hay pedidos en proceso
+            </div>
+        </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="column-right">
+        <div class="image-grid">
+            <a class="pointer" (click)="goToRecipe('53085')">
+                <img src="https://www.themealdb.com/images/media/meals/vdwloy1713225718.jpg">
+            </a>
+            <a class="pointer" (click)="goToRecipe('52940')">
+                <img src="https://www.themealdb.com/images/media/meals/sypxpx1515365095.jpg">
+            </a>
+            <a class="pointer" (click)="goToRecipe('52872')">
+                <img src="https://www.themealdb.com/images/media/meals/quuxsx1511476154.jpg">
+            </a>
+            <a class="pointer" (click)="goToRecipe('52836')">
+                <img src="https://www.themealdb.com/images/media/meals/wqqvyq1511179730.jpg">
+            </a>
+            <a class="pointer" (click)="goToRecipe('53080')">
+                <img src="https://www.themealdb.com/images/media/meals/0206h11699013358.jpg">
+            </a>
+            <a class="pointer" (click)="goToRecipe('52824')">
+                <img src="https://www.themealdb.com/images/media/meals/ssrrrs1503664277.jpg">
+            </a>
+            <a class="pointer" (click)="goToRecipe('52806')">
+                <img src="https://www.themealdb.com/images/media/meals/qptpvt1487339892.jpg">
+            </a>
+            <a class="pointer" (click)="goToRecipe('52835')">
+                <img src="https://www.themealdb.com/images/media/meals/uquqtu1511178042.jpg">
+            </a>            
+        </div>
+    </div>
+</div>

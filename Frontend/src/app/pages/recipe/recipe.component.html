@@ -1,0 +1,18 @@
+<div class="recipe-container" *ngIf="recipeDetails">
+  <div class="recipe-imgContainer">
+    <img class="recipe-image" [src]="recipeDetails.meals[0].strMealThumb" alt="{{ recipeDetails.meals[0].strMeal }}">
+  </div>
+  <div class="recipe-details">
+    <h2 class="recipe-title">{{ recipeDetails.meals[0].strMeal }} - {{ recipeDetails.meals[0].strArea }} {{ recipeDetails.meals[0].strCategory }}</h2>
+    <ul class="recipe-ingredients">
+      <li *ngFor="let ingredient of getIngredients()">
+        {{ ingredient }}
+      </li>
+    </ul>
+
+    <div class="recipe-buttons">
+      <button class="order-button" (click)="encargarPedido()">Encargar</button>
+      <button class="back-button" (click)="menuPrincipal()">Volver al menú principal</button>
+    </div>
+  </div>
+</div>

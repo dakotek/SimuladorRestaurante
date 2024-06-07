@@ -1,2 +1,40 @@
 <app-nav-without-search></app-nav-without-search>
-<br><br><h1>VISTA COCINERO</h1>
+<div class="container mt-4">
+    <div class="column-left">
+        <h3 class="mb-4">Comandas pendientes</h3>
+        <div *ngIf="pendingDishes" class="row">
+            <div class="col-6" *ngFor="let dish of pendingDishes">
+                <a (click)="pickOrder(dish.id, dish.recipe)">
+                    <img class="w-100 mb-1 image mb-3" [src]="dish.img" [alt]="dish.name">
+                </a>
+            </div>
+        </div>
+        <div *ngIf="pendingDishes === null" class="no-recipes">
+            <h5>No hay comandas pendientes</h5>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="column-right">
+        <div *ngIf="recipeDetails">
+            <h3>Mi comanda</h3>
+            <div class=" mx-auto col-8 mb-3">
+              <img class="w-100" [src]="recipeDetails.meals[0].strMealThumb" alt="{{ recipeDetails.meals[0].strMeal }}">
+            </div>
+            <div>
+              <h2>{{ recipeDetails.meals[0].strMeal }} - {{ recipeDetails.meals[0].strArea }} {{ recipeDetails.meals[0].strCategory }}</h2>
+              <ul>
+                <li *ngFor="let ingredient of getIngredients()">
+                  {{ ingredient }}
+                </li>
+              </ul>
+              <p class="formatted">{{getIntructions()}}</p>
+              <div class="d-flex justify-content-center mt-2">
+                <button (click)="finishOrder()" class="btn btn-primary">Terminar plato</button>
+              </div>
+            </div>
+        </div>
+        <div *ngIf="recipeDetails === null" class="no-recipes">
+            <h3>Selecciona una receta</h3>
+        </div>
+    </div>
+</div>
