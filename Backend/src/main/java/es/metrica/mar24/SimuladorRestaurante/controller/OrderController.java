@@ -84,4 +84,25 @@ public class OrderController {
         List<Order> nonCancelledOrders = orderService.getNonCancelledOrders();
         return ResponseEntity.ok(nonCancelledOrders);
     }
+    
+    @PostMapping("/assign-cook")
+    public String assignCookToRecipe(@RequestParam Long orderId, @RequestParam Long cookId) {
+        try {
+            Order order = orderService.assignCookToRecipe(orderId, cookId);
+            return "Cook assigned: " + order.toString();
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+    }
+    
+    @GetMapping("/in-preparation/cook/{cookId}")
+    public String getOrderInPreparationByCook(@PathVariable Long cookId) {
+        Optional<Order> order = orderService.getOrderInPreparationByCook(cookId);
+        
+        if (order.isPresent()) {
+            return "Order found: " + order.get().toString();
+        } else {
+            return "Order not found";
+        }
+    }
 }
