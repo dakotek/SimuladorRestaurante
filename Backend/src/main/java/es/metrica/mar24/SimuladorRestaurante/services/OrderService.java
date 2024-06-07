@@ -62,4 +62,20 @@ public class OrderService {
 	public List<Order> getCollectedOrders() {
 		return orderRepository.findByStatusNot(OrderStatus.COLLECTED);
 	}
+	
+	public Order assignCookToRecipe(Long orderId, Long cookId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setCook(cookId);
+            orderRepository.save(order);
+            return order;
+        } else {
+            throw new IllegalArgumentException("Order not found");
+        }
+    }
+	
+	public Optional<Order> getOrderInPreparationByCook(Long cookId) {
+        return orderRepository.findByCookAndStatus(cookId, OrderStatus.IN_PREPARATION);
+    }
 }

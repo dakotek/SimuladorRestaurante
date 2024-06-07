@@ -1,6 +1,7 @@
 package es.metrica.mar24.SimuladorRestaurante.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,4 +12,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByStatus(OrderStatus status);
     
     List<Order> findByStatusNot(OrderStatus status);
+    
+    Optional<Order> findByCookAndStatus(Long cookId, OrderStatus status);
 }
